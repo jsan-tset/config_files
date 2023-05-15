@@ -41,6 +41,10 @@ call plug#begin('~/.vim/plugged')
   Plug 'frazrepo/vim-rainbow'
   Plug 'airblade/vim-gitgutter'
   Plug 'vim-airline/vim-airline'
+  Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
 call plug#end()
+
+" Plugins conf
+let g:rainbow_active = 1
 "  }}}
