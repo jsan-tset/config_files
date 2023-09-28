@@ -34,6 +34,8 @@ augroup END
 "  
 "  As easy as adding Plug'username/plugin-name' 
 "   :PlugInstall to dowload and install them
+"
+"  If first time: check https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
 
   Plug 'dense-analysis/ale'
