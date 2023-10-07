@@ -30,6 +30,36 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from laptopbattery import LaptopBatteryWidget
 
+#Colors
+catppuccin = {
+    "rosewater": "dc8a78",
+    "flamingo": "#f3cdcd",
+    "pink": "#f5c2e7",  
+    "mauve": "#ddb6f2", 
+    "red": "#f28fad",   
+    "maroon": "#e8a2af",
+    "peach": "#f8bd96", 
+    "yellow": "#fae3b0",    
+    "green": "#abe9b3", 
+    "teal": "#b4e8e0",  
+    "sky": "#89dceb",   
+    "saphire": "#209fb5",
+    "blue": "#96cdfb",  
+    "lavender": "#7287fd",
+    "text": "#4c4f69",
+    "subtext1":	"#5c5f77",
+    "subtext0":	"#6c6f77",
+    "overlay2":	"#7c7f93",
+    "overlay1":	"#8c8fa1",
+    "overlay0":	"#9ca0b0",
+    "surface2": "#acb0be",
+    "surface1": "#bcc0cc",
+    "surface0": "#ccd0da",
+    "base": "#eff1f5",
+    "mantle": "#e6e9ef",
+    "crust": "#dce0e8",
+}
+
 mod = "mod4"
 terminal = "kitty"
 wallpaper_path = "/home/jaume/Pictures/wallpapers/nostromo.jpg"
@@ -125,57 +155,120 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="sans",
-    fontsize=12,
+    font="Source Code Pro",
+    fontsize=18,
     padding=3,
+    foreground=catppuccin["text"],
+    background=catppuccin["base"],
 )
 extension_defaults = widget_defaults.copy()
+
+def get_widgets(primary=False):
+    widgets =[
+        widget.Spacer(
+            length=3,
+        ),
+        widget.GroupBox(             
+            highlight_method="line",
+            block_highlight_text_color=[catppuccin["surface0"], catppuccin['text']],
+            background=catppuccin["surface0"],
+            highlight_color=[catppuccin["mantle"], catppuccin["crust"]], 
+            active=catppuccin["text"],
+            inactive=catppuccin["subtext0"],
+        ),
+        widget.WindowName(             
+            fontsize=16,      
+        ),
+        widget.Cmus( 
+        ),
+        widget.Spacer(length=10),
+        widget.Wlan(
+            interface="wlan0",
+            format='{essid} {percent:2.0%}'
+        ),
+        widget.Spacer(length=10),
+        LaptopBatteryWidget(
+            font_colour = catppuccin['text'],
+            border_colour = catppuccin['text'],
+            border_charge_colour = catppuccin['lavender'],
+            border_critical_colour = catppuccin['subtext0'],
+            fill_normal = catppuccin['subtext0'],
+            fill_low = catppuccin['red'],
+            fill_critical = "#ff0000",#catppuccin['red'],
+            percentage_low = 0.25,
+            percentage_critical = 0.1,
+        ),
+        widget.Spacer(length=10),
+        #widget.Net(
+        #    interface="wlan0",
+        #    format='{down} ↓↑{up}',
+        #    prefix='M'
+        #),
+        widget.Clock(                 
+            format="%a %H:%M %d/%m",
+            foreground=catppuccin["text"],
+            background=catppuccin["mantle"],
+        ),         
+    ]
+
+    if primary:
+        widgets.insert(10, widget.Systray())
+    return widgets
+
 
 screens = [
     Screen(
         top=bar.Bar(
-            [
-                widget.GroupBox(
-                    rounded=True
-                ),
-                #widget.CurrentLayout(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Net(interface="wlan0"),
-                LaptopBatteryWidget(
-                    border_colour = "#ffffff",
-                    border_charge_colour = "#00ffff",
-                    border_critical_colour = "#ff0000",
-                    fill_normal = "#ccffff",
-                    fill_low = "#ffbb00",
-                    fill_critical = "#ff0000",
-                    percentage_low = 0.25,
-                    percentage_critical = 0.1,
-                ),
-                #widget.Chord(
-                #    chords_colors={
-                #        "launch": ("#ff0000", "#ffffff"),
-                #    },
-                #    name_transform=lambda name: name.upper(),
-                #),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
-                widget.Systray(),
-                #widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.Clock(format="%a %H:%M %d/%m/%Y"),
-            ],
-            24,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            get_widgets(primary=True),
+            22,
+            background=catppuccin['base'],
         ),
         wallpaper=wallpaper_path,
         wallpaper_mode='stretch',
-        # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-        # By default we handle these events delayed to already improve performance, however your system might still be struggling
-        # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-        # x11_drag_polling_rate = 60,
     ),
 ]
+
+#screens = [
+#    Screen(
+#        top=bar.Bar(
+#            [
+#                widget.GroupBox(
+#                    rounded=True
+#                ),
+#                #widget.CurrentLayout(),
+#                widget.Prompt(),
+#                widget.WindowName(),
+#                #widget.Net(interface="wlan0"),
+#                LaptopBatteryWidget(
+#                    border_colour = "#ffffff",
+#                    border_charge_colour = "#00ffff",
+#                    border_critical_colour = "#ff0000",
+#                    fill_normal = "#ccffff",
+#                    fill_low = "#ffbb00",
+#                    fill_critical = "#ff0000",
+#                    percentage_low = 0.25,
+#                    percentage_critical = 0.1,
+#                ),
+#                #widget.Chord(
+#                #    chords_colors={
+#                #        "launch": ("#ff0000", "#ffffff"),
+#                #    },
+#                #    name_transform=lambda name: name.upper(),
+#                #),
+#                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
+#                # widget.StatusNotifier(),
+#                widget.Systray(),
+#                #widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+#                widget.Clock(format="%a %H:%M %d/%m/%Y"),
+#            ],
+#            24,
+#            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+#            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+#        ),
+#        wallpaper=wallpaper_path,
+#        wallpaper_mode='stretch',
+#    ),
+#]
 
 # Drag floating layouts.
 mouse = [
