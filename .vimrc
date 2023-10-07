@@ -21,6 +21,8 @@ set shiftwidth=4
 set tabstop=4
 set expandtab
 
+set termguicolors
+
 " VIMSCRIPT ---------------------------- {{{
 " This will enable code folding.
 " Use the marker method of folding.
@@ -39,6 +41,7 @@ augroup END
 call plug#begin('~/.vim/plugged')
 
   Plug 'dense-analysis/ale'
+  Plug 'catppuccin/vim', { 'as': 'catppuccin' }
   Plug 'preservim/nerdtree'
   Plug 'frazrepo/vim-rainbow'
   Plug 'airblade/vim-gitgutter'
